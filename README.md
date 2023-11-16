@@ -9,7 +9,6 @@
 Елена Симонайтене
 
 Технологии:
-Spring boot
-Docker
+Spring boot,
+Docker,
 Maven
-Swagger
