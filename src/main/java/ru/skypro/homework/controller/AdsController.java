@@ -1,9 +1,7 @@
 package ru.skypro.homework.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.Ad;
-import ru.skypro.homework.dto.Ads;
-import ru.skypro.homework.dto.ExtendedAd;
+import ru.skypro.homework.dto.*;
 
 @RequestMapping("/ads")
 @CrossOrigin(value = "http://localhost:3000")
@@ -21,12 +19,32 @@ public class AdsController {
     }
 
     @PostMapping
-    public Ad createAd(@RequestBody Ad ad) {
-        return new Ad(); // Возвращает пустой объект Ad
+    public CreateOrUpdateAd createAd(@RequestBody CreateOrUpdateAd createOrUpdateAd) {
+        return new CreateOrUpdateAd(); // Возвращает пустой объект CreateOrUpdateAd
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public void deleteAd(@PathVariable int id) {
-        return ;
+        return;
     }
+    @PatchMapping("/{id}")
+    public CreateOrUpdateAd updateAd(@PathVariable int id, @PathVariable CreateOrUpdateAd title, @PathVariable CreateOrUpdateAd price,
+                                     @PathVariable CreateOrUpdateAd description) {
+        return new CreateOrUpdateAd(); // Возвращает пустой объект createOrUpdateAd
+    }
+    @PatchMapping("/{id}/image")
+    public CreateOrUpdateAd updateAdImage (@PathVariable int id, @PathVariable CreateOrUpdateAd image) {
+        return new CreateOrUpdateAd(); // Возвращает пустой объект createOrUpdateAd
+    }
+
+    @GetMapping("/{adId}/comments")
+    public Comments getComments(@PathVariable int adId) {
+        return new Comments(); // Возвращает пустой объект Comments
+    }
+
+    @PostMapping("/{adId}/comments")
+    public Comment addComment(@PathVariable int adId, @RequestBody Comment comment) {
+        return new Comment(); // Возвращает пустой объект Comment
+    }
+
 }

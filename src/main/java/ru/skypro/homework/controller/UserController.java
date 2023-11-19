@@ -17,4 +17,16 @@ public class UserController {
     public User updateUser(@PathVariable int id, @RequestBody UpdateUser user) {
         return new User(); // Возвращает пустой объект User
     }
+    @PostMapping("/users/set_password")
+    public String setPassword (@PathVariable String password, @PathVariable String newPassword){
+        return newPassword; // возвращает пустой объект NewPassword
+    }
+    @PatchMapping("/users/me")
+    public User usersMe (@RequestBody User user){
+        return new User();// возвращает пустой объект User
+    }
+    @PatchMapping("/users/me/image")
+    public User userMeImage (@PathVariable User image){
+        return image; //возвращает пустое значение поля image
+    }
 }
