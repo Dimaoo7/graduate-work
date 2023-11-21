@@ -18,7 +18,7 @@ public class Ad {
     private String description;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private User author;
+    private UserEntity author;
     private List<Comment> comments;
     private String image;
     private int price;
@@ -75,11 +75,11 @@ public class Ad {
         this.description = description;
     }
 
-    public User getAuthor() {
+    public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserEntity author) {
         this.author = author;
     }
 
@@ -107,7 +107,7 @@ public class Ad {
         this.price = price;
     }
 
-    public Ad(String title, String description, User author, List<Comment> comments, String image, int price) {
+    public Ad(String title, String description, UserEntity author, List<Comment> comments, String image, int price) {
         this.title = title;
         this.description = description;
         this.author = author;

@@ -9,7 +9,7 @@ import javax.persistence.GenerationType;
 import java.util.Objects;
 
 @Entity
-public class User {
+public class UserEntity {
     @javax.persistence.Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id", nullable = false)
@@ -21,8 +21,6 @@ public class User {
     private Role role;
     private String image;
 
-    public User() {
-    }
 
     @Override
     public String toString() {
@@ -41,7 +39,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
+        UserEntity user = (UserEntity) o;
         return Objects.equals(id, user.id) && Objects.equals(firstName, user.firstName) && Objects.equals(lastName, user.lastName) && Objects.equals(phone, user.phone) && Objects.equals(email, user.email) && role == user.role && Objects.equals(image, user.image);
     }
 
@@ -106,7 +104,7 @@ public class User {
         this.image = image;
     }
 
-    public User(String firstName, String lastName, String phone, String email, Role role, String image) {
+    public UserEntity(String firstName, String lastName, String phone, String email, Role role, String image) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;

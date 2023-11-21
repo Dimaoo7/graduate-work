@@ -13,7 +13,7 @@ public class Comment {
     private String text;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private User author;
+    private UserEntity author;
     private long createdAt;
     private String authorFirstName;
     private String authorImage;
@@ -63,11 +63,11 @@ public class Comment {
         this.text = text;
     }
 
-    public User getAuthor() {
+    public UserEntity getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(UserEntity author) {
         this.author = author;
     }
 
@@ -95,7 +95,7 @@ public class Comment {
         this.authorImage = authorImage;
     }
 
-    public Comment(String text, User author, int createdAt, String authorFirstName, String authorImage) {
+    public Comment(String text, UserEntity author, int createdAt, String authorFirstName, String authorImage) {
         this.text = text;
         this.author = author;
         this.createdAt = createdAt;
