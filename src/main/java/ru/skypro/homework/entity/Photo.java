@@ -4,34 +4,29 @@ import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
+@ToString
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity
-@Table(name = "ads")
-@NoArgsConstructor
-public class Ad {
+@Table(name = "photos")
+public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
-    private String title;
-    private String description;
-    private int price;
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private User author;
-    @ToString.Exclude
-    @Basic(fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "ad")
-    private List<Comment> comments;
-    @OneToOne
-    private Photo image;
+    private String filePath;
+    private long fileSize;
+    private String contentType;
 
+    @Lob
+    private byte[] data;
+    @OneToOne
+    private Ad ad;
 
     @Override
     public final boolean equals(Object o) {
@@ -40,8 +35,8 @@ public class Ad {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Ad ad = (Ad) o;
-        return id != null && Objects.equals(id, ad.id);
+        Photo photo = (Photo) o;
+        return id != null && Objects.equals(id, photo.id);
     }
 
     @Override
