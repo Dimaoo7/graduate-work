@@ -1,7 +1,7 @@
-
 package ru.skypro.homework.entity;
 
-import ru.skypro.homework.dto.Comment;
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
 import java.util.List;

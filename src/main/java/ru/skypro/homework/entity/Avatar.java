@@ -26,7 +26,7 @@ public class Avatar {
     private byte[] data;
 
     @OneToOne
-    private User user;
+    private UserEntity user;
 
     @Override
     public final boolean equals(Object o) {

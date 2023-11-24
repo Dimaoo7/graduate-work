@@ -23,15 +23,7 @@ public class Comment {
     private Long createdAt;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private User author;
     private UserEntity author;
-    private long createdAt;
-    private String authorFirstName;
-    private String authorImage;
-
-    public Comment() {
-    }
-
     @ManyToOne
     @JoinColumn(name = "ad_id")
     private Ad ad;
