@@ -9,11 +9,6 @@ import ru.skypro.homework.dto.*;
 public class AdsController {
 
     @GetMapping
-    public Ads getAds() {
-        return new Ads(); // Возвращает пустой объект Ads
-    }
-
-    @GetMapping
     public ExtendedAd getAdById(@PathVariable int id) {
         return new ExtendedAd(); // Возвращает пустой объект ExtendedAd
     }

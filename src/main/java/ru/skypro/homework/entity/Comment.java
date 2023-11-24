@@ -1,18 +1,29 @@
 
 package ru.skypro.homework.entity;
 
+import lombok.*;
+import org.hibernate.proxy.HibernateProxy;
+
 import javax.persistence.*;
 import java.util.Objects;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
+@Table(name = "comments")
 public class Comment {
-    @javax.persistence.Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "id")
-    @Column(name = "id",nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String text;
+    private Long createdAt;
     @ManyToOne
     @JoinColumn(name = "author_id")
+    private User author;
     private UserEntity author;
     private long createdAt;
     private String authorFirstName;
@@ -21,86 +32,23 @@ public class Comment {
     public Comment() {
     }
 
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private Ad ad;
 
     @Override
-    public String toString() {
-        return "Comment{" +
-                "id=" + id +
-                ", text='" + text + '\'' +
-                ", author=" + author +
-                ", createdAt=" + createdAt +
-                ", authorFirstName='" + authorFirstName + '\'' +
-                ", authorImage='" + authorImage + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
         Comment comment = (Comment) o;
-        return createdAt == comment.createdAt && Objects.equals(id, comment.id) && Objects.equals(text, comment.text) && Objects.equals(author, comment.author) && Objects.equals(authorFirstName, comment.authorFirstName) && Objects.equals(authorImage, comment.authorImage);
+        return id != null && Objects.equals(id, comment.id);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, text, author, createdAt, authorFirstName, authorImage);
+    public final int hashCode() {
+        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public UserEntity getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(UserEntity author) {
-        this.author = author;
-    }
-
-    public Long getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(int createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getAuthorFirstName() {
-        return authorFirstName;
-    }
-
-    public void setAuthorFirstName(String authorFirstName) {
-        this.authorFirstName = authorFirstName;
-    }
-
-    public String getAuthorImage() {
-        return authorImage;
-    }
-
-    public void setAuthorImage(String authorImage) {
-        this.authorImage = authorImage;
-    }
-
-    public Comment(String text, UserEntity author, int createdAt, String authorFirstName, String authorImage) {
-        this.text = text;
-        this.author = author;
-        this.createdAt = createdAt;
-        this.authorFirstName = authorFirstName;
-        this.authorImage = authorImage;
-    }
-
 }
