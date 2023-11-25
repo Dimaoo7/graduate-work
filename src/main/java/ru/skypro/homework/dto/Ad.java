@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class Ad {
-    private int pk;
+    private Long id;
     private int author;
     private String description;
     private String image;

@@ -5,17 +5,17 @@ import lombok.Data;
 @Data
 public class User {
 
-    private int id;
+    private Long id;
     private String email;
     private String firstName;
     private String lastName;
     private String phone;
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

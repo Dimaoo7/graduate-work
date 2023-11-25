@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class ExtendedAd extends Ad {
-    private int pk;
+    private Long id;
     private String authorFirstName;
     private String authorLastName;
     private String description;

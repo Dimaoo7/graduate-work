@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CreateOrUpdateAd {
-    private Integer pk; // id объявления
+    private Long id;
 
     private String description; // описание объявления
 
