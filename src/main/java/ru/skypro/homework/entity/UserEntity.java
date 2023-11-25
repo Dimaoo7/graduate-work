@@ -34,7 +34,7 @@ public class UserEntity {
     private List<CommentEntity> commentEntities;
     @ToString.Exclude
     @OneToMany(mappedBy = "author")
-    private List<AdEntity> ads;
+    private List<AdEntity> adEntities;
 
     @Override
     public final boolean equals(Object o) {
@@ -50,5 +50,85 @@ public class UserEntity {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Avatar getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(Avatar avatar) {
+        this.avatar = avatar;
+    }
+
+    public List<CommentEntity> getComments() {
+        return commentEntities;
+    }
+
+    public void setComments(List<CommentEntity> commentEntities) {
+        this.commentEntities = commentEntities;
+    }
+
+    public List<AdEntity> getAds() {
+        return adEntities;
+    }
+
+    public void setAds(List<AdEntity> adEntities) {
+        this.adEntities = adEntities;
     }
 }

@@ -27,7 +27,7 @@ public class CommentEntity {
 
     @ManyToOne
     @JoinColumn(name = "ad_id")
-    private AdEntity ad;
+    private AdEntity adEntity;
 
     @Override
     public final boolean equals(Object o) {
@@ -43,5 +43,45 @@ public class CommentEntity {
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public UserEntity getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserEntity author) {
+        this.author = author;
+    }
+
+    public AdEntity getAd() {
+        return adEntity;
+    }
+
+    public void setAd(AdEntity adEntity) {
+        this.adEntity = adEntity;
     }
 }
