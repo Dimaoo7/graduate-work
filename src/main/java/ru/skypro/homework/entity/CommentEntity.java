@@ -1,10 +1,10 @@
+
 package ru.skypro.homework.entity;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -14,24 +14,20 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name = "ads")
-public class Ad {
+@Table(name = "comments")
+public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
-    private int price;
+    private String text;
+    private Long createdAt;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private User author;
-    @ToString.Exclude
-    @Basic(fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "ad")
-    private List<Comment> comments;
-    @OneToOne
-    private Photo image;
+    private UserEntity author;
 
+    @ManyToOne
+    @JoinColumn(name = "ad_id")
+    private AdEntity adEntity;
 
     @Override
     public final boolean equals(Object o) {
@@ -40,12 +36,52 @@ public class Ad {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Ad ad = (Ad) o;
-        return id != null && Objects.equals(id, ad.id);
+        CommentEntity commentEntity = (CommentEntity) o;
+        return id != null && Objects.equals(id, commentEntity.id);
     }
 
     @Override
     public final int hashCode() {
         return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public Long getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Long createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public UserEntity getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(UserEntity author) {
+        this.author = author;
+    }
+
+    public AdEntity getAd() {
+        return adEntity;
+    }
+
+    public void setAd(AdEntity adEntity) {
+        this.adEntity = adEntity;
     }
 }
