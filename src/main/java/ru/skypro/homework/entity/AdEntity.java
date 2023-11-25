@@ -1,10 +1,10 @@
-
 package ru.skypro.homework.entity;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -14,20 +14,24 @@ import java.util.Objects;
 @Setter
 @ToString
 @Entity
-@Table(name = "comments")
-public class Comment {
+@Table(name = "ads")
+public class AdEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String text;
-    private Long createdAt;
+    private String title;
+    private String description;
+    private int price;
     @ManyToOne
     @JoinColumn(name = "author_id")
-    private User author;
+    private UserEntity author;
+    @ToString.Exclude
+    @Basic(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "ad")
+    private List<CommentEntity> commentEntities;
+    @OneToOne
+    private PhotoEntity image;
 
-    @ManyToOne
-    @JoinColumn(name = "ad_id")
-    private Ad ad;
 
     @Override
     public final boolean equals(Object o) {
@@ -36,8 +40,8 @@ public class Comment {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Comment comment = (Comment) o;
-        return id != null && Objects.equals(id, comment.id);
+        AdEntity ad = (AdEntity) o;
+        return id != null && Objects.equals(id, ad.id);
     }
 
     @Override

@@ -2,31 +2,39 @@ package ru.skypro.homework.entity;
 
 import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
+import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
-@ToString
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
-@Table(name = "photos")
-public class Photo {
+@Table(name = "users")
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false)
     private Long id;
-    private String filePath;
-    private long fileSize;
-    private String contentType;
+    private String username;
+    private String firstName;
+    private String lastName;
+    private String password;
+    private String phone;
+    private Role role;
 
-    @Lob
-    private byte[] data;
     @OneToOne
-    private Ad ad;
+    private AvatarEntity avatarEntity;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "author")
+    private List<CommentEntity> commentEntities;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "author")
+    private List<AdEntity> ads;
 
     @Override
     public final boolean equals(Object o) {
@@ -35,8 +43,8 @@ public class Photo {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Photo photo = (Photo) o;
-        return id != null && Objects.equals(id, photo.id);
+        UserEntity userEntity = (UserEntity) o;
+        return id != null && Objects.equals(id, userEntity.id);
     }
 
     @Override

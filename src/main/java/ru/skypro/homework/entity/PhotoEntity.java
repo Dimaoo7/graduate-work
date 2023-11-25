@@ -13,10 +13,11 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
-@Table(name = "avatars")
-public class Avatar {
+@Table(name = "photos")
+public class PhotoEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Long id;
     private String filePath;
     private long fileSize;
@@ -24,9 +25,8 @@ public class Avatar {
 
     @Lob
     private byte[] data;
-
     @OneToOne
-    private User user;
+    private AdEntity ad;
 
     @Override
     public final boolean equals(Object o) {
@@ -35,8 +35,8 @@ public class Avatar {
         Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        Avatar avatar = (Avatar) o;
-        return id != null && Objects.equals(id, avatar.id);
+        PhotoEntity photoEntity = (PhotoEntity) o;
+        return id != null && Objects.equals(id, photoEntity.id);
     }
 
     @Override
