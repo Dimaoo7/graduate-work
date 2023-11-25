@@ -108,12 +108,12 @@ public class UserEntity {
         this.role = role;
     }
 
-    public Avatar getAvatar() {
-        return avatar;
+    public AvatarEntity getAvatar() {
+        return avatarEntity;
     }
 
-    public void setAvatar(Avatar avatar) {
-        this.avatar = avatar;
+    public void setAvatar(AvatarEntity avatar) {
+        this.avatarEntity = avatar;
     }
 
     public List<CommentEntity> getComments() {
