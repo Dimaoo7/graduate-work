@@ -9,8 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
-public class Login {
-
-    private String username;
-    private String password;
+public class CreateOrUpdateComment {
+    String text;
 }

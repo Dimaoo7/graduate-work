@@ -1,13 +1,13 @@
-GET http://localhost:8080/ads/1/comments
+GET http://localhost:8080/adEntities/1/commentEntities
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 ###
 POST http://localhost:8080/login
 Content-Type: application/json
 
 {
-  "username": "user@gmail.com",
+  "username": "userEntity@gmail.com",
   "password": "password"
 }
 
@@ -16,7 +16,7 @@ POST http://localhost:8080/register
 Content-Type: application/json
 
 {
-  "username": "user@gmail.com",
+  "username": "userEntity@gmail.com",
   "password": "password",
   "firstName": " asdad",
   "lastName": " asdad",
@@ -25,19 +25,19 @@ Content-Type: application/json
 }
 
 ###
-GET http://localhost:8080/ads/me
+GET http://localhost:8080/adEntities/me
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 ###
 GET http://localhost:8080/users/me
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 ###
 PATCH http://localhost:8080/users/me
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 {
   "phone": "33333",
@@ -46,14 +46,14 @@ Authorization: Basic user@gmail.com password
 }
 
 ###
-GET http://localhost:8080/ads
+GET http://localhost:8080/adEntities
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 ###
 POST http://localhost:8080/users/set_password
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 {
   "newPassword": "password",
@@ -61,9 +61,9 @@ Authorization: Basic user@gmail.com password
 }
 
 ###
-POST http://localhost:8080/ads
+POST http://localhost:8080/adEntities
 Content-Type: application/json
-Authorization: Basic user@gmail.com password
+Authorization: Basic userEntity@gmail.com password
 
 {
   "price": 123,
