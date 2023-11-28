@@ -62,6 +62,11 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-ui</artifactId>
+      <version>1.7.0</version>
+    </dependency>
   </dependencies>
 
   <build>
@@ -78,23 +83,8 @@
           </excludes>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-          <annotationProcessorPaths>
-            <path>
-              <groupId>org.mapstruct</groupId>
-              <artifactId>mapstruct-processor</artifactId>
-              <version>1.4.2.Final</version>
-            </path>
-          </annotationProcessorPaths>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
+
 
 </project>

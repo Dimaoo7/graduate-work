@@ -10,7 +10,7 @@ public class AdMapper {
 
      public Ad mapToAdDto(AdEntity adEntity) {
         Ad dtoAd = new Ad();
-        dtoAd.setPk(adEntity.getId());
+        dtoAd.setId(adEntity.getId());
         dtoAd.setAuthor(adEntity.getAuthor().getId());
         dtoAd.setDescription(adEntity.getDescription());
         dtoAd.setImage(adEntity.getImage().getFilePath());
@@ -21,7 +21,7 @@ public class AdMapper {
 
     public ExtendedAd mapperToExtendedAdDto(AdEntity adEntity) {
         ExtendedAd dtoExtendedAd = new ExtendedAd();
-        dtoExtendedAd.setPk(adEntity.getId());
+        dtoExtendedAd.setId(adEntity.getId());
         dtoExtendedAd.setAuthorFirstName(adEntity.getAuthor().getFirstName());
         dtoExtendedAd.setAuthorLastName(adEntity.getAuthor().getLastName());
         dtoExtendedAd.setDescription(adEntity.getDescription());
