@@ -4,34 +4,33 @@ import lombok.*;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Collection;
 
+@Entity
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@ToString
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
+    private String password;
     private String firstName;
     private String lastName;
-    private String password;
     private String phone;
     private Role role;
 
     @OneToOne
-    private AvatarEntity avatarEntity;
-    @ToString.Exclude
+    private AvatarEntity avatar;
+
     @OneToMany(mappedBy = "author")
-    private List<CommentEntity> commentEntities;
-    @ToString.Exclude
+    private Collection<AdEntity> ads;
+
     @OneToMany(mappedBy = "author")
-    private List<AdEntity> adEntities;
+    private Collection<CommentEntity> comments;
+
 }
