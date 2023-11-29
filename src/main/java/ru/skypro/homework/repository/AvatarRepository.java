@@ -7,4 +7,5 @@ import ru.skypro.homework.entity.AvatarEntity;
 @Repository
 public interface AvatarRepository extends JpaRepository<AvatarEntity, Long> {
 
+
 }
