@@ -10,7 +10,4 @@ import java.util.Optional;
 @Repository
 public interface PhotoRepository extends JpaRepository<PhotoEntity, Long> {
 
-    Optional<PhotoEntity> findByAdId(Long id);
-
-    Optional<PhotoEntity> findByAd(AdEntity ad);
 }

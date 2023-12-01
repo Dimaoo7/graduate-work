@@ -17,7 +17,7 @@ public class AvatarEntity {
     private Long id;
     private String filePath;
     private long fileSize;
-    private String contentType;
+    private String mediaType;
 
     @Lob
     private byte[] data;
