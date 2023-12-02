@@ -5,7 +5,9 @@ import lombok.*;
 @Data
 public class NewPassword {
 
-    private String password;
+    private String currentPassword;
 
     private String newPassword;
+
+
 }

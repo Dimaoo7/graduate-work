@@ -32,14 +32,4 @@ public class AdsController {
         return new CreateOrUpdateAd(); // Возвращает пустой объект createOrUpdateAd
     }
 
-    @GetMapping("/{adId}/comments")
-    public Comments getComments(@PathVariable int adId) {
-        return new Comments(); // Возвращает пустой объект Comments
-    }
-
-    @PostMapping("/{adId}/comments")
-    public Comment addComment(@PathVariable int adId, @RequestBody Comment comment) {
-        return new Comment(); // Возвращает пустой объект Comment
-    }
-
 }

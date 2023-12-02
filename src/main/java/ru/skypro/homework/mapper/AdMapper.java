@@ -26,7 +26,7 @@ public class AdMapper {
         dtoExtendedAd.setAuthorLastName(adEntity.getAuthor().getLastName());
         dtoExtendedAd.setDescription(adEntity.getDescription());
         dtoExtendedAd.setPhone(adEntity.getAuthor().getPhone());
-        dtoExtendedAd.setEmail(adEntity.getAuthor().getUsername());
+        dtoExtendedAd.setEmail(adEntity.getAuthor().getUserName());
         dtoExtendedAd.setImage(adEntity.getImage().getFilePath());
         dtoExtendedAd.setPrice(adEntity.getPrice());
         dtoExtendedAd.setTitle(adEntity.getImage().getFilePath());
