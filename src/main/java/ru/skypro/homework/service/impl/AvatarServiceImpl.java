@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.entity.AvatarEntity;
@@ -28,7 +29,8 @@ public class AvatarServiceImpl implements AvatarService {
         this.userService = userService;
     }
     @Override
-    public void updateAvatar(Integer id, MultipartFile image) throws IOException {
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
+    public void updateAvatar(Long id, MultipartFile image) throws IOException {
         if (userService.getUser().getId().equals(id)) {
             AvatarEntity avatar = new AvatarEntity();
             Path path = Path.of(avatarsDir);

@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
@@ -35,7 +36,7 @@ public class CommentServiceImpl implements CommentService {
     public Comments getComments(Integer id) {
 
         List<Comment> comments = commentRepository.findByAdId(id.longValue()).stream()
-                .map(comment -> commentMapper.mapperToCommentDto(comment))
+                .map(commentMapper::mapperToCommentDto)
                 .collect(Collectors.toList());
 
         return new Comments(comments.size(), comments);
@@ -43,14 +44,31 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comment addComment(Integer id, CreateOrUpdateComment createOrUpdateComment, String username) {
-        AdEntity ad = adRepository.findById(id.longValue()).get();
+        AdEntity ad = adRepository.findById(id.longValue()).orElse(null);
         UserEntity author = userService.checkUserByUsername(username);
 
+        if (ad == null) {
+            throw new IllegalArgumentException("Ad not found");
+        }
         CommentEntity comment = new CommentEntity();
         comment.setAdEntity(ad);
         comment.setAuthor(author);
         comment.setCreatedAt(System.currentTimeMillis());
         comment.setText(createOrUpdateComment.getText());
+
+        return commentMapper.mapperToCommentDto(comment);
+    }
+
+    @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
+    public Comment updateComment(Long id, CreateOrUpdateComment createOrUpdateComment, String username) {
+        CommentEntity comment = commentRepository.findById(id).orElse(null);
+        if (comment == null) {
+            throw new IllegalArgumentException("Comment not found");
+        }
+        comment.setText(createOrUpdateComment.getText());
+
+        commentRepository.save(comment);
 
         return commentMapper.mapperToCommentDto(comment);
     }

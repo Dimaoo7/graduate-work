@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.Ad;
@@ -9,7 +10,6 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.PhotoEntity;
-import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.PhotoRepository;
@@ -97,8 +97,9 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
     public boolean removeAd(Integer id) {
-        AdEntity ad = adRepository.findById(id.longValue()).get();
+        AdEntity ad = adRepository.findById(id.longValue()).orElse(null);
         if (ad != null) {
             adRepository.delete(ad);
             return true;
@@ -108,6 +109,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
     public Ad updateAds(Integer id, CreateOrUpdateAd dto) {
         AdEntity entity = adRepository.findById(id.longValue()).get();
 
@@ -121,6 +123,7 @@ public class AdServiceImpl implements AdService {
 
 
     @Override
+    @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
     public PhotoEntity updateImage(Integer id, MultipartFile image) throws IOException {
         Optional<AdEntity> entity = adRepository.findById(id.longValue());
         if (entity.isPresent()) {

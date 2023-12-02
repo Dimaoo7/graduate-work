@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+import lombok.Getter;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +17,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
-
     private final UserRepository userRepository;
 
-
+    @Getter
     private UserEntity userEntity;
     private Login authorizationData;
 
@@ -58,7 +58,4 @@ public class AuthServiceImpl implements AuthService {
         return authorizationData;
     }
 
-    public UserEntity getUserEntity() {
-        return userEntity;
-    }
 }
