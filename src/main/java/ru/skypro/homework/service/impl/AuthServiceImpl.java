@@ -54,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
         return true;
     }
 
-    public Login getLogin() {
+    public String getLogin() {
         return authorizationData;
     }
 

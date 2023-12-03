@@ -28,7 +28,7 @@ public class AvatarServiceImpl implements AvatarService {
         this.userService = userService;
     }
     @Override
-    public void updateAvatar(Integer id, MultipartFile image) throws IOException {
+    public void updateAvatar(Long id, MultipartFile image) throws IOException {
         if (userService.getUser().getId().equals(id)) {
             AvatarEntity avatar = new AvatarEntity();
             Path path = Path.of(avatarsDir);

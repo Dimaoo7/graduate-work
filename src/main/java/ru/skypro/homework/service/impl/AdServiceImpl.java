@@ -9,7 +9,6 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.PhotoEntity;
-import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.PhotoRepository;
@@ -57,7 +56,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Ad addAd(CreateOrUpdateAd properties, MultipartFile image) throws IOException {
+    public Ad addAd() throws IOException {
         AdEntity adEntity = new AdEntity();
         adEntity.setTitle(properties.getTitle());
         adEntity.setPrice(properties.getPrice());
@@ -91,13 +90,13 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public ExtendedAd getAds(Integer id) {
+    public ExtendedAd getAds(Long id) {
         AdEntity entity = adRepository.findById(id.longValue()).get();
         return adMapper.mapperToExtendedAdDto(entity);
     }
 
     @Override
-    public boolean removeAd(Integer id) {
+    public boolean removeAd(Long id) {
         AdEntity ad = adRepository.findById(id.longValue()).get();
         if (ad != null) {
             adRepository.delete(ad);
@@ -108,7 +107,7 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public Ad updateAds(Integer id, CreateOrUpdateAd dto) {
+    public Ad updateAds(Long id, CreateOrUpdateAd dto) {
         AdEntity entity = adRepository.findById(id.longValue()).get();
 
         entity.setTitle(dto.getTitle());
@@ -121,7 +120,7 @@ public class AdServiceImpl implements AdService {
 
 
     @Override
-    public PhotoEntity updateImage(Integer id, MultipartFile image) throws IOException {
+    public PhotoEntity updateImage(Long id, MultipartFile image) throws IOException {
         Optional<AdEntity> entity = adRepository.findById(id.longValue());
         if (entity.isPresent()) {
             PhotoEntity photo = new PhotoEntity();

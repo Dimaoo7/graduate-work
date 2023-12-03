@@ -12,14 +12,14 @@ import java.io.IOException;
 public interface AdService {
     Ads getAllAds();
 
-    Ad addAd(CreateOrUpdateAd properties, MultipartFile image) throws IOException;
+    Ad addAd() throws IOException;
 
-    ExtendedAd getAds(Integer id);
+    ExtendedAd getAds(Long id);
 
-    boolean removeAd(Integer id);
+    boolean removeAd(Long id);
 
-    Ad updateAds(Integer id, CreateOrUpdateAd dto);
+    Ad updateAds(Long id, CreateOrUpdateAd dto);
 
 
-    PhotoEntity updateImage(Integer id, MultipartFile image) throws IOException;
+    PhotoEntity updateImage(Long id, MultipartFile image) throws IOException;
 }

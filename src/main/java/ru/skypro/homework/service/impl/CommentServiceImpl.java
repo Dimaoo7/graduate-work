@@ -32,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comments getComments(Integer id) {
+    public Comments getComments(Long id) {
 
         List<Comment> comments = commentRepository.findByAdId(id.longValue()).stream()
                 .map(comment -> commentMapper.mapperToCommentDto(comment))
@@ -42,7 +42,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment addComment(Integer id, CreateOrUpdateComment createOrUpdateComment, String username) {
+    public Comment addComment(Long id, CreateOrUpdateComment createOrUpdateComment, String username) {
         AdEntity ad = adRepository.findById(id.longValue()).get();
         UserEntity author = userService.checkUserByUsername(username);
 
