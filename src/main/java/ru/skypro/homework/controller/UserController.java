@@ -27,7 +27,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<User> getUser() {
-        UserEntity userEntity = userService.getUser();
+        UserEntity userEntity = userService.getUser(authentication);
         if (userEntity != null) {
             return ResponseEntity.ok(UserMapper.mapperFromUserEntityToUser(userEntity));
         } else {
