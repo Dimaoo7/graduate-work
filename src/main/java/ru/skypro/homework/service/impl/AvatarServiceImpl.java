@@ -31,8 +31,8 @@ public class AvatarServiceImpl implements AvatarService {
     }
     @Override
     @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
-    public void updateAvatar(Long id, MultipartFile image) throws IOException {
-        if (userService.getUser().getId().equals(id)) {
+    public void updateAvatar(Long id, MultipartFile image,Authentication authentication) throws IOException {
+        if (userService.getUser(authentication).getId().equals(id)) {
             AvatarEntity avatar = new AvatarEntity();
             Path path = Path.of(avatarsDir);
             if (!path.toFile().exists()) {
