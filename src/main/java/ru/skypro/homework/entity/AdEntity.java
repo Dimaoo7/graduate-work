@@ -27,6 +27,7 @@ public class AdEntity {
     @OneToMany(mappedBy = "adEntity")
     private List<CommentEntity> commentEntities;
     @OneToOne
-    private PhotoEntity image;
+    private PhotoEntity photo;
 
+    private String image;
 }
