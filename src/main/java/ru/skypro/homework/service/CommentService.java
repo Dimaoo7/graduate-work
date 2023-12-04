@@ -7,9 +7,7 @@ import ru.skypro.homework.dto.CreateOrUpdateComment;
 @Service
 public interface CommentService {
 
-    Comments getComments(Integer id);
+    Comments getComments(Long id);
 
-    Comment addComment(Integer id, CreateOrUpdateComment createOrUpdateComment, String username);
-
-    Comment updateComment(Long id, CreateOrUpdateComment createOrUpdateComment, String username);
+    Comment addComment(Long id, CreateOrUpdateComment createOrUpdateComment, String username);
 }

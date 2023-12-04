@@ -1,6 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,7 +40,7 @@ public class AvatarServiceImpl implements AvatarService {
             }
             var dotIndex = Objects.requireNonNull(image.getOriginalFilename()).lastIndexOf('.');
             var ext = image.getOriginalFilename().substring(dotIndex + 1);
-            var photoPath = avatarsDir + "/" + userService.getUser().getUserName() + "." + ext;
+            var photoPath = avatarsDir + "/" + userService.getUser(authentication).getUserName() + "." + ext;
             try (var in = image.getInputStream();
                  var out = new FileOutputStream(photoPath)) {
                 in.transferTo(out);
@@ -48,7 +49,7 @@ public class AvatarServiceImpl implements AvatarService {
             avatar.setData(image.getBytes());
             avatar.setFileSize(image.getSize());
             avatar.setMediaType(image.getContentType());
-            avatar.setUser(userService.getUser());
+            avatar.setUser(userService.getUser(authentication));
             avatarRepository.save(avatar);
         }
     }
