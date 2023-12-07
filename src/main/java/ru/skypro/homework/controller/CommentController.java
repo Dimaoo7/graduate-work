@@ -11,8 +11,8 @@ import ru.skypro.homework.service.impl.AuthServiceImpl;
 @RestController
 @RequestMapping("/ads")
 public class CommentController {
-    AuthServiceImpl authService;
-    CommentService commentService;
+    private final AuthServiceImpl authService;
+    private final CommentService commentService;
 
     public CommentController(AuthServiceImpl authService, CommentService commentService) {
         this.authService = authService;

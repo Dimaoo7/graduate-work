@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,12 +13,10 @@ import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
 import ru.skypro.homework.entity.PhotoEntity;
-import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.PhotoRepository;
 import ru.skypro.homework.service.AdService;
-import ru.skypro.homework.service.UserService;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,7 +37,6 @@ public class AdServiceImpl implements AdService {
     private final ImageServiceImpl imageServiceImpl;
     private final AdMapper adMapper;
     private final UserServiceImpl userServiceImpl;
-    @Value("${path.to.photos.folder}")
     private final String photoDir;
 
     public AdServiceImpl(AdRepository adRepository,

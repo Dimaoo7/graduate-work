@@ -12,8 +12,8 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/avatar")
 public class AvatarController {
-    AvatarService avatarService;
-    AuthService authService;
+    private final AvatarService avatarService;
+    private final AuthService authService;
 
     public AvatarController(AvatarService avatarService, AuthService authService) {
         this.avatarService = avatarService;

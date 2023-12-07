@@ -96,13 +96,8 @@ public class AdsController {
     @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasRole('ADMIN') or @adServiceImpl.isAuthorAd(authentication.name, #adId)")
     public ResponseEntity<byte[]> updateImage(@PathVariable("id") Long adId,
-                                              @RequestParam MultipartFile image,
-                                              Authentication authentication) throws IOException {
+                                              @RequestParam MultipartFile image) throws IOException {
         log.info("Объявление обновлено: {}", LoggingMethodImpl.getMethodName());
-
-        if ( authentication.getName() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
 
         adService.updateImage(adId, image);
 

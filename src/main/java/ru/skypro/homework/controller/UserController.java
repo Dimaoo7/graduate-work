@@ -15,12 +15,13 @@ import ru.skypro.homework.service.impl.AuthServiceImpl;
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    UserService userService;
-    Authentication authentication;
-    AuthServiceImpl authService;
+    private final UserService userService;
+    private final Authentication authentication;
+    private final AuthServiceImpl authService;
 
-    public UserController(UserService userService, AuthServiceImpl authService) {
+    public UserController(UserService userService, Authentication authentication, AuthServiceImpl authService) {
         this.userService = userService;
+        this.authentication = authentication;
         this.authService = authService;
     }
 
