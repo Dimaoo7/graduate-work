@@ -27,5 +27,4 @@ public class CommentEntity {
     @ManyToOne
     @JoinColumn(name = "ad_id")
     private AdEntity adEntity;
-
 }

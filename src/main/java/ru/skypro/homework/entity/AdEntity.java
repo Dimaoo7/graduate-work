@@ -14,7 +14,7 @@ import java.util.List;
 @ToString
 @Entity
 @Table(name = "ads")
-public class AdEntity {
+public class AdEntity extends ModelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

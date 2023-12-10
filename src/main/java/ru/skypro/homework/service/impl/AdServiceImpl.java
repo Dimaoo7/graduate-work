@@ -2,7 +2,6 @@ package ru.skypro.homework.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,43 +11,43 @@ import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.entity.AdEntity;
-import ru.skypro.homework.entity.PhotoEntity;
+import ru.skypro.homework.entity.UserEntity;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.repository.PhotoRepository;
 import ru.skypro.homework.service.AdService;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
 @Slf4j
+@Service
 @Transactional
 public class AdServiceImpl implements AdService {
 
     private final AdRepository adRepository;
     private final PhotoRepository photoRepository;
-    private final ImageServiceImpl imageServiceImpl;
     private final AdMapper adMapper;
-    private final UserServiceImpl userServiceImpl;
-    private final String photoDir;
+    private final ImageServiceImpl imageService;
+    private final UserServiceImpl userService;
+    @Value("${path.to.photos.folder}")
+    private String photoDir;
 
     public AdServiceImpl(AdRepository adRepository,
-                         PhotoRepository photoRepository, ImageServiceImpl imageServiceImpl, AdMapper adMapper,
-                         UserServiceImpl userServiceImpl, @Value("${path.to.photos.folder}") String photoDir) {
+                         PhotoRepository photoRepository,
+                         AdMapper adMapper,
+                         ImageServiceImpl imageService,
+                         UserServiceImpl userService) {
         this.adRepository = adRepository;
         this.photoRepository = photoRepository;
-        this.imageServiceImpl = imageServiceImpl;
         this.adMapper = adMapper;
-        this.userServiceImpl = userServiceImpl;
-        this.photoDir = photoDir;
+        this.imageService = imageService;
+        this.userService = userService;
     }
+
 
     @Override
     public Ads getAllAds() {
@@ -58,57 +57,65 @@ public class AdServiceImpl implements AdService {
         return new Ads(dtos.size(), dtos);
     }
 
+
     @Override
-    public Ad addAd(CreateOrUpdateAd properties, MultipartFile image, Authentication authentication) throws IOException {
+    public Ad addAd(CreateOrUpdateAd properties,
+                    MultipartFile image,
+                    Authentication authentication) throws IOException {
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+
         AdEntity adEntity = new AdEntity();
+
+
         adEntity.setTitle(properties.getTitle());
         adEntity.setPrice(properties.getPrice());
         adEntity.setDescription(properties.getDescription());
 
-        adEntity.setPhoto(adMapper.mapToMultipartPhoto(image));
-        adEntity.setAuthor(userServiceImpl.getUser(authentication));
-        adEntity.setImage("photo/image" + adEntity.getPhoto().getId());
-        log.info("image = " + adEntity.getImage());
 
-        Path path = Path.of(photoDir,adEntity.getPhoto().getId() +
-                "." + imageServiceImpl.getExtension(image.getOriginalFilename()));
+        adEntity.setAuthor(userService.getUser(authentication.getName()));
 
-        log.info("path = " + path);
+        adEntity = (AdEntity) imageService.updateEntitiesPhoto(image, adEntity);
+        log.info("Сущность adEntity сформированная в {}", LoggingMethodImpl.getMethodName());
 
-        imageServiceImpl.saveFileOnDisk(adEntity.getPhoto(), path);
 
         adRepository.save(adEntity);
 
-        adEntity = adRepository.findByAuthor(authentication.getName());
-
-        adEntity.getPhoto().setAd(adEntity);
-
-        photoRepository.save(adEntity.getPhoto());
 
         return adMapper.mapToAdDto(adEntity);
-
     }
+
+
 
     @Override
     public ExtendedAd getAds(Long id) {
-        AdEntity entity = adRepository.findById(id.longValue()).get();
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        AdEntity entity = adRepository.findById(id).get();
         return adMapper.mapperToExtendedAdDto(entity);
     }
 
+    @Transactional
     @Override
-    public boolean removeAd(Long id) {
-        AdEntity ad = adRepository.findById(id.longValue()).get();
+    public boolean removeAd(Long id) throws IOException {
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        AdEntity ad = adRepository.findById(id).get();
         if (ad != null) {
+
             adRepository.delete(ad);
+            photoRepository.delete(ad.getPhoto());
+            String filePath = ad.getFilePath();
+            Path path = Path.of(filePath);
+            Files.delete(path);
             return true;
         } else {
             return false;
         }
     }
 
+    @Transactional
     @Override
     public Ad updateAds(Long id, CreateOrUpdateAd dto) {
-        AdEntity entity = adRepository.findById(id.longValue()).get();
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        AdEntity entity = adRepository.findById(id).get();
 
         entity.setTitle(dto.getTitle());
         entity.setPrice(dto.getPrice());
@@ -118,38 +125,33 @@ public class AdServiceImpl implements AdService {
         return adMapper.mapToAdDto(entity);
     }
 
-
     @Override
-    @PreAuthorize("hasRole('ROLE_ADMIN') or #ad.creatorId == principal.id")
-    public PhotoEntity updateImage(Long id, MultipartFile image) throws IOException {
-        Optional<AdEntity> entity = adRepository.findById(id.longValue());
-        if (entity.isPresent()) {
-            PhotoEntity photo = new PhotoEntity();
-            Path path = Path.of(photoDir);
-            if (!path.toFile().exists()) {
-                Files.createDirectories(path);
-            }
-            var dotIndex = Objects.requireNonNull(image.getOriginalFilename()).lastIndexOf('.');
-            var ext = image.getOriginalFilename().substring(dotIndex + 1);
-            var photoPath = photoDir + "/" + entity.get().getTitle() + "." + ext;
-            try (var in = image.getInputStream();
-                 var out = new FileOutputStream(photoPath)) {
-                in.transferTo(out);
-            }
-            photo.setFilePath(photoPath);
-            photo.setData(image.getBytes());
-            photo.setFileSize(image.getSize());
-            photo.setMediaType(image.getContentType());
-            photo.setAd(entity.get());
-            return photoRepository.save(photo);
-        } else {
-            return null;
-        }
+    @Transactional
+    public Ads getAdsMe(String username) {
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        UserEntity author = userService.getUser(username);
+        List<Ad> ads = null;
+        ads = adRepository.findByAuthor(author).stream()
+                .map(adMapper::mapToAdDto)
+                .collect(Collectors.toList());
+        return new Ads(ads.size(), ads);
     }
 
+    @Transactional
     @Override
-    public PhotoEntity findPhoto(Long id) {
-        log.info("Получена фотография {}", LoggingMethodImpl.getMethodName());
-        return photoRepository.findByAdId(id).get();
+    public void updateImage(Long id, MultipartFile image) throws IOException {
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        AdEntity adEntity = adRepository.findById(id).orElseThrow(RuntimeException::new);
+        adEntity = (AdEntity) imageService.updateEntitiesPhoto(image, adEntity);
+        log.info("adEntity cоздано - {}", adEntity != null);
+        adRepository.save(adEntity);
     }
+
+    public boolean isAuthorAd(String username, Long adId) {
+        log.info("Использован метод сервиса: {}", LoggingMethodImpl.getMethodName());
+
+        AdEntity adEntity = adRepository.findById(adId).orElseThrow(RuntimeException::new);
+        return adEntity.getAuthor().getUserName().equals(username);
+    }
+
 }
