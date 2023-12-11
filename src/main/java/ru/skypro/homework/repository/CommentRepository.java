@@ -14,4 +14,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     @Query( value = "select * from comments where ad_id = :ad_id", nativeQuery = true)
     List<CommentEntity> findByAdId(@Param("ad_id") Long adId);
 
+    CommentEntity findFirstByText(String text);
+
 }

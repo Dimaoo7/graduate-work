@@ -13,7 +13,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class UserEntity {
+public class UserEntity extends ModelEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,12 +25,14 @@ public class UserEntity {
     private Role role;
 
     @OneToOne
-    private AvatarEntity avatar;
+    private PhotoEntity photo;
 
     @OneToMany(mappedBy = "author")
     private Collection<AdEntity> ads;
 
     @OneToMany(mappedBy = "author")
     private Collection<CommentEntity> comments;
+
+    private String filePath;
 
 }

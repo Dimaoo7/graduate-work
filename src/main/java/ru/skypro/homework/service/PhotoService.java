@@ -1,7 +1,7 @@
 package ru.skypro.homework.service;
 
-import org.springframework.security.core.Authentication;
+import java.io.IOException;
 
 public interface PhotoService {
-    byte[] getPhoto(Authentication authentication, Long id);
+    byte[] getPhoto(Long id) throws IOException;
 }
