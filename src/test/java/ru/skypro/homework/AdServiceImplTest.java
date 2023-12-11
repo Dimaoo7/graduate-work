@@ -47,14 +47,13 @@ public class AdServiceImplTest {
         ad2.setTitle("Ad 2");
         adList.add(ad2);
 
-        when(adRepository.findAll());
+        when(adRepository.findAll()); //thenReturn(adList); но он хочет чтоб было List<AdEntity>
 
-        Ads expectedAds = new Ads(1,adList);
+        Ads expectedAds = new Ads(1, adList);
         expectedAds.setCount(adList.size());
 
-        Ads actualAds= adService.getAllAds();
+        Ads actualAds = adService.getAllAds();
 
         assertEquals(expectedAds.getCount(), actualAds.getCount());
-
     }
 }
