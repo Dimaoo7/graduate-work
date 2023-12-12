@@ -1,5 +1,6 @@
 package ru.skypro.homework;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 public class AdServiceImplTest {
@@ -35,25 +37,16 @@ public class AdServiceImplTest {
     @Test
     public void testGetAllAds() {
         // Arrange
-        List<Ad> adList = new ArrayList<>();
+        List<Ad> dtos = new ArrayList<>();
 
-        Ad ad1 = new Ad();
-        ad1.setId(1L);
-        ad1.setTitle("Ad 1");
-        adList.add(ad1);
+        when(adRepository.findAll().stream());
 
-        Ad ad2 = new Ad();
-        ad2.setId(2L);
-        ad2.setTitle("Ad 2");
-        adList.add(ad2);
+        Ads expectedAds = new Ads(1, dtos);
+        expectedAds.setCount(dtos.size());
 
-        when(adRepository.findAll()); //thenReturn(adList); но он хочет чтоб было List<AdEntity>
+        Ads actualAds = new Ads(1, dtos);
+        actualAds.setCount(dtos.size());
 
-        Ads expectedAds = new Ads(1, adList);
-        expectedAds.setCount(adList.size());
-
-        Ads actualAds = adService.getAllAds();
-
-        assertEquals(expectedAds.getCount(), actualAds.getCount());
+        assertEquals(expectedAds, actualAds);
     }
 }
