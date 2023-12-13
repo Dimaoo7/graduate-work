@@ -20,28 +20,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
+@Slf4j
 public class CommentServiceImpl implements CommentService {
+
     private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
-    private final UserRepository userRepository;
     private final AdRepository adRepository;
+    private final UserRepository userRepository;
+    private final CommentMapper commentMapper;
     private final UserServiceImpl userService;
 
-
-    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper, UserRepository userRepository, AdRepository adRepository, UserServiceImpl userService) {
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              CommentMapper commentMapper,
+                              AdRepository adRepository,
+                              UserRepository userRepository,
+                              UserServiceImpl userService) {
         this.commentRepository = commentRepository;
         this.commentMapper = commentMapper;
-        this.userRepository = userRepository;
         this.adRepository = adRepository;
+        this.userRepository = userRepository;
         this.userService = userService;
     }
 
     @Transactional
     @Override
     public Comments getComments(Long id) {
-        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
         List<Comment> comments = commentRepository.findByAdId(id).stream()
                 .map(commentMapper::mapperToCommentDto)
                 .collect(Collectors.toList());
@@ -52,24 +56,26 @@ public class CommentServiceImpl implements CommentService {
     @Transactional
     @Override
     public Comment addComment(Long id, CreateOrUpdateComment createOrUpdateComment, String username) {
-        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
 
-        UserEntity author = userService.getUser(username);
+        UserEntity author = userService.getUser(username);//todo заменить метод на getUser
         AdEntity ad = adRepository.findById(id).orElse(null);
 
+        //Создаем сущность comment и заполняем поля
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setAuthor(author);
         commentEntity.setAdEntity(ad);
         commentEntity.setText(createOrUpdateComment.getText());
         commentEntity.setCreatedAt(System.currentTimeMillis());
 
-
+        //Сохраняем сущность commentEntity в БД
         commentRepository.save(commentEntity);
 
-
+        //Заполняем поле с комментариями у пользователя и сохраняем в БД
         author.getComments().add(commentEntity);
         userRepository.save(author);
 
+        //Создаем возвращаемую сущность ДТО comment и заполняем поля
         Comment commentDTO = new Comment();
         commentDTO.setAuthor(author.getId());
 
@@ -88,7 +94,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public String deleteComment(Long commentId, String username) {
-        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
         Optional<CommentEntity> comment = commentRepository.findById(commentId);
         if (comment.isPresent()) {
             UserEntity author = userService.getUser(username);
@@ -100,29 +106,23 @@ public class CommentServiceImpl implements CommentService {
                     commentRepository.delete(comment.get());
                     return "комментарий удален";
                 } else {
-                    return "forbidden";
+                    return "forbidden"; //'403' For the user deletion is forbidden
                 }
             }
         }
-        return "not found";
+        return "not found"; //'404' Comment not found
     }
 
-    @Transactional
     @Override
-    public Comment updateComment(Long commentId, CreateOrUpdateComment createOrUpdateComment, String username) {
-        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
-        Optional<CommentEntity> commentOptional = commentRepository.findById(commentId);
-        if (commentOptional.isPresent()) {
-            CommentEntity comment = commentOptional.get();
-            UserEntity author = userService.getUser(username);
-            if (author.getComments().contains(comment)) {
-                comment.setText(createOrUpdateComment.getText());
-                commentRepository.save(comment);
-                return commentMapper.mapperToCommentDto(comment);
-            } else {
-                return commentMapper.mapperToCommentDto(comment);
-            }
-        }
-        return null; //'404' Comment not found
+    public Comment updateComment(Long adId,
+                                 Long commentId,
+                                 CreateOrUpdateComment createOrUpdateComment) {
+        log.info("Использован метод сервиса: {}", LoggingMethodImpl.getMethodName());
+
+        CommentEntity comment = commentRepository.findById(commentId).get();
+        comment.setText(createOrUpdateComment.getText());
+        commentRepository.save(comment);
+        return commentMapper.mapperToCommentDto(comment);
     }
+
 }

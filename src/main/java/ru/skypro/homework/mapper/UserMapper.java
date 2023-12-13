@@ -48,6 +48,17 @@ public class UserMapper {
         return dtoUpdateUser;
     }
 
+    public static UserEntity mapFromRegisterToUserEntity(Register dto) {
+        UserEntity entity = new UserEntity();
+        entity.setUserName(dto.getUsername());
+        entity.setPassword(dto.getPassword());
+        entity.setFirstName(dto.getFirstName());
+        entity.setLastName(dto.getLastName());
+        entity.setPhone(dto.getPhone());
+        entity.setRole(dto.getRole());
+        return entity;
+
+    }
     public PhotoEntity mapMultipartFileToPhoto(MultipartFile image) {
         log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
         PhotoEntity photo = new PhotoEntity();
