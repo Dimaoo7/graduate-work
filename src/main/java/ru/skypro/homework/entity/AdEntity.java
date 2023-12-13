@@ -24,11 +24,10 @@ public class AdEntity {
     @ManyToOne
     @JoinColumn(name = "author_id")
     private UserEntity author;
-    @ToString.Exclude
-    @Basic(fetch = FetchType.LAZY)
-    @OneToMany(mappedBy = "ad")
+    @OneToMany(mappedBy = "adEntity")
     private List<CommentEntity> commentEntities;
     @OneToOne
-    private PhotoEntity image;
+    private PhotoEntity photo;
 
+    private String image;
 }

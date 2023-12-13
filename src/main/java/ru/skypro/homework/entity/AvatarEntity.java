@@ -4,14 +4,12 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
 @Data
-@ToString
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "avatars")
 public class AvatarEntity {
     @Id
@@ -19,12 +17,12 @@ public class AvatarEntity {
     private Long id;
     private String filePath;
     private long fileSize;
-    private String contentType;
+    private String mediaType;
 
     @Lob
     private byte[] data;
 
     @OneToOne
-    private UserEntity userEntity;
+    private UserEntity user;
 
 }

@@ -10,5 +10,7 @@ import java.util.List;
 @Repository
 public interface AdRepository extends JpaRepository<AdEntity, Long> {
 
-    List<AdEntity> findAllByAuthor(UserEntity author);
+    List<AdEntity> findByAuthor(UserEntity author);
+
+    AdEntity findByAuthor(String name);
 }

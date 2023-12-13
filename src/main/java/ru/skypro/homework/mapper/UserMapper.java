@@ -11,7 +11,7 @@ public class UserMapper {
 
     public static UserEntity mapperFromRegisterToUserEntity(Register dtoRegister) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUsername(dtoRegister.getUsername());
+        userEntity.setUserName(dtoRegister.getUsername());
         userEntity.setPassword(dtoRegister.getPassword());
         userEntity.setFirstName(dtoRegister.getFirstName());
         userEntity.setLastName(dtoRegister.getLastName());
@@ -23,7 +23,7 @@ public class UserMapper {
     public static User mapperFromUserEntityToUser(UserEntity userEntity) {
         User dtoUser = new User();
         dtoUser.setId(userEntity.getId());
-        dtoUser.setEmail(userEntity.getUsername());
+        dtoUser.setEmail(userEntity.getUserName());
         dtoUser.setFirstName(userEntity.getFirstName());
         dtoUser.setLastName(userEntity.getLastName());
         dtoUser.setPhone(userEntity.getPhone());

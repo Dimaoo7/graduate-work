@@ -9,10 +9,10 @@ public class CommentMapper {
 
     public Comment mapperToCommentDto(CommentEntity commentEntity) {
         Comment dtoComment = new Comment();
-        dtoComment.setPk(commentEntity.getId());
+        dtoComment.setId(commentEntity.getId());
         dtoComment.setAuthor(commentEntity.getAuthor().getId());
-        dtoComment.setAuthorImage(commentEntity.getAuthor().getAvatar().getFilePath());
         dtoComment.setAuthorFirstName(commentEntity.getAuthor().getFirstName());
+        dtoComment.setAuthorImage(commentEntity.getAuthor().getAvatar().getFilePath());
         dtoComment.setText(commentEntity.getText());
         dtoComment.setCreatedAt(commentEntity.getCreatedAt());
         return dtoComment;
