@@ -21,13 +21,14 @@ import static java.nio.file.StandardOpenOption.CREATE_NEW;
 public class ImageServiceImpl implements ImageService {
 
     private final PhotoRepository photoRepository;
-        private final UserMapper userMapper;
-        @Value("${path.to.photos.folder}")
-        private String photoDir;
-        public ImageServiceImpl(PhotoRepository photoRepository, UserMapper userMapper) {
-            this.photoRepository = photoRepository;
-            this.userMapper = userMapper;
-        }
+    private final UserMapper userMapper;
+    @Value("${path.to.photos.folder}")
+    private String photoDir;
+
+    public ImageServiceImpl(PhotoRepository photoRepository, UserMapper userMapper) {
+        this.photoRepository = photoRepository;
+        this.userMapper = userMapper;
+    }
 
 
     @Override
@@ -42,18 +43,20 @@ public class ImageServiceImpl implements ImageService {
         entity.setPhoto(photoEntity);
         photoRepository.save(photoEntity);
 
+        String urlToAvatar = "/photo/image/" + entity.getPhoto().getId();
+        log.info("URL для перехода фронта к методу возврата аватара: {}", urlToAvatar);
+
+        entity.setImage(urlToAvatar);
+
 
         Path filePath = Path.of(photoDir, entity.getPhoto().getId() + "."
                 + this.getExtension(image.getOriginalFilename()));
         log.info("путь к файлу для хранения фото на ПК: {}", filePath);
 
-        //добавляем в сущность фото путь где оно хранится на ПК
         entity.getPhoto().setFilePath(filePath.toString());
 
-        //добавляем в сущность путь на ПК
         entity.setFilePath(filePath.toString());
 
-        //сохранение на ПК
         this.saveFileOnDisk(image, filePath);
 
         return entity;
@@ -73,6 +76,19 @@ public class ImageServiceImpl implements ImageService {
             bis.transferTo(bos);
         }
         return true;
+    }
+    public PhotoEntity saveFileOnDisk(PhotoEntity photo, Path filePath) throws IOException {
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        Files.createDirectories(filePath.getParent());
+        Files.deleteIfExists(filePath);
+        try (InputStream is = new ByteArrayInputStream(photo.getData());
+             OutputStream os = Files.newOutputStream(filePath, CREATE_NEW);
+             BufferedInputStream bis = new BufferedInputStream(is, 1024);
+             BufferedOutputStream bos = new BufferedOutputStream(os, 1024);
+        ) {
+            bis.transferTo(bos);
+        }
+        return photo;
     }
 
     public byte[] getPhotoFromDisk(PhotoEntity photo) {

@@ -33,6 +33,7 @@ public class UserEntity extends ModelEntity {
     @OneToMany(mappedBy = "author")
     private Collection<CommentEntity> comments;
 
-    private String filePath;
 
+    private String filePath;
+    private String image;
 }

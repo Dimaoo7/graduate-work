@@ -58,7 +58,7 @@ public class CommentServiceImpl implements CommentService {
     public Comment addComment(Long id, CreateOrUpdateComment createOrUpdateComment, String username) {
         log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
 
-        UserEntity author = userService.getUser(username);//todo заменить метод на getUser
+        UserEntity author = userService.getUser(username);
         AdEntity ad = adRepository.findById(id).orElse(null);
 
         //Создаем сущность comment и заполняем поля

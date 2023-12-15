@@ -12,5 +12,6 @@ public interface AdRepository extends JpaRepository<AdEntity, Long> {
 
     List<AdEntity> findByAuthor(UserEntity author);
 
-    AdEntity findByAuthor(String name);
+    AdEntity findByAuthor(String userName);
+
 }

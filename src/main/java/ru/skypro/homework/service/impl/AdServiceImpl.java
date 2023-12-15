@@ -90,21 +90,16 @@ public class AdServiceImpl implements AdService {
     public ExtendedAd getAds(Long id) {
         log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
         AdEntity entity = adRepository.findById(id).get();
-        return adMapper.mapperToExtendedAdDto(entity);
+        return adMapper.mapToExtendedAdDto(entity);
     }
 
     @Transactional
     @Override
-    public boolean removeAd(Long id) throws IOException {
+    public boolean removeAd(Long id) {
         log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
         AdEntity ad = adRepository.findById(id).get();
         if (ad != null) {
-
             adRepository.delete(ad);
-            photoRepository.delete(ad.getPhoto());
-            String filePath = ad.getFilePath();
-            Path path = Path.of(filePath);
-            Files.delete(path);
             return true;
         } else {
             return false;

@@ -16,12 +16,12 @@ import ru.skypro.homework.service.AuthService;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserDetailsManager manager;
+    private final UserDetailService userDetailService;
     private final PasswordEncoder encoder;
     private final UserRepository userRepository;
 
-    public AuthServiceImpl(UserDetailsManager manager, PasswordEncoder encoder, UserRepository userRepository) {
-        this.manager = manager;
+    public AuthServiceImpl(UserDetailService userDetailService, PasswordEncoder encoder, UserRepository userRepository) {
+        this.userDetailService = userDetailService;
         this.encoder = encoder;
         this.userRepository = userRepository;
     }
@@ -29,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean login(String userName, String password) {
         log.info("Method {}", LoggingMethodImpl.getMethodName());
-        UserDetails userDetails = manager.loadUserByUsername(userName);
+        UserDetails userDetails = userDetailService.loadUserByUsername(userName);
         if (!encoder.matches(password, userDetails.getPassword())) {
             throw new WrongPasswordException("Неверный пароль");
         }
