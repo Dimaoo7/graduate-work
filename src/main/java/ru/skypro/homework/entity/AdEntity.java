@@ -3,7 +3,8 @@ package ru.skypro.homework.entity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Collection;
+
 
 @Data
 @Builder
@@ -25,9 +26,12 @@ public class AdEntity extends ModelEntity {
     @JoinColumn(name = "author_id")
     private UserEntity author;
     @OneToMany(mappedBy = "adEntity")
-    private List<CommentEntity> commentEntities;
+    private Collection<CommentEntity> commentEntities;
     @OneToOne
     private PhotoEntity photo;
 
     private String image;
+    private String filePath;
+
+
 }
