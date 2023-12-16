@@ -85,25 +85,22 @@ public class AdServiceImpl implements AdService {
     }
 
 
-
     @Override
     public ExtendedAd getAds(Long id) {
         log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
-        AdEntity entity = adRepository.findById(id).get();
+        AdEntity entity = adRepository.findAdById(id);
         return adMapper.mapToExtendedAdDto(entity);
     }
+
 
     @Transactional
     @Override
     public boolean removeAd(Long id) {
         log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
-        AdEntity ad = adRepository.findById(id).get();
-        if (ad != null) {
-            adRepository.delete(ad);
-            return true;
-        } else {
-            return false;
-        }
+        AdEntity ad = adRepository.findAdById(id);
+        adRepository.delete(ad);
+        return true;
+
     }
 
     @Transactional

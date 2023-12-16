@@ -4,13 +4,13 @@ import lombok.*;
 
 @Data
 public class ExtendedAd extends Ad {
-    private Long id;
+    private Long pk;
     private String authorFirstName;
     private String authorLastName;
     private String description;
-    private String phone;
     private String email;
     private String image;
-    private int price;
+    private String phone;
+    private Integer price;
     private String title;
 }

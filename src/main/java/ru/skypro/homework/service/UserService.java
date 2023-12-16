@@ -33,4 +33,6 @@ public interface UserService {
 
     @Transactional
     void updateUserImage(MultipartFile image, Authentication authentication) throws IOException;
+
+    UserEntity checkUserByUsername(String username);
 }

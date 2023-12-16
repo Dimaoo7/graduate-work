@@ -89,4 +89,13 @@ public class UserServiceImpl implements UserService {
         //сохранение сущности user в БД
         userRepository.save(userEntity);
     }
+    @Override
+    public UserEntity checkUserByUsername(String username) {
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        UserEntity user = userRepository.findUserEntityByUserName(username);
+        if (user == null) {
+            throw new UserNotFoundException("Пользователя с таким логином в базе данных нет");
+        }
+        return user;
+    }
 }
