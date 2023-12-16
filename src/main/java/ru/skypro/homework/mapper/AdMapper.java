@@ -31,18 +31,18 @@ public class AdMapper {
         return dtoAd;
     }
 
-    public ExtendedAd mapperToExtendedAdDto(AdEntity adEntity) {
-        ExtendedAd dtoExtendedAd = new ExtendedAd();
-        dtoExtendedAd.setId(adEntity.getId());
-        dtoExtendedAd.setAuthorFirstName(adEntity.getAuthor().getFirstName());
-        dtoExtendedAd.setAuthorLastName(adEntity.getAuthor().getLastName());
-        dtoExtendedAd.setDescription(adEntity.getDescription());
-        dtoExtendedAd.setPhone(adEntity.getAuthor().getPhone());
-        dtoExtendedAd.setEmail(adEntity.getAuthor().getUserName());
-        dtoExtendedAd.setImage(adEntity.getImage());
-        dtoExtendedAd.setPrice(adEntity.getPrice());
-        dtoExtendedAd.setTitle(adEntity.getImage());
-        return dtoExtendedAd;
+    public ExtendedAd mapToExtendedAdDto(AdEntity entity) {
+        ExtendedAd dto = new ExtendedAd();
+        dto.setId(entity.getId());
+        dto.setAuthorFirstName(entity.getAuthor().getFirstName());
+        dto.setAuthorLastName(entity.getAuthor().getLastName());
+        dto.setDescription(entity.getDescription());
+        dto.setEmail(entity.getAuthor().getUserName());
+        dto.setImage(entity.getImage());
+        dto.setPhone(entity.getAuthor().getPhone());
+        dto.setPrice(entity.getPrice());
+        dto.setTitle(entity.getTitle());
+        return dto;
     }
 
     public PhotoEntity mapToMultipartPhoto(MultipartFile image) throws IOException {
@@ -51,7 +51,6 @@ public class AdMapper {
         photoEntity.setFileSize(image.getSize());
         photoEntity.setMediaType(image.getContentType());
         photoEntity.setData(Objects.requireNonNull(image.getBytes()));
-        photoRepository.save(photoEntity);
         return photoEntity;
     }
 }

@@ -28,6 +28,7 @@ public interface ImageService {
          * @param photo - фотография
          * @throws IOException если фото на диске не найдено
          */
+        public PhotoEntity saveFileOnDisk(PhotoEntity photo, Path filePath) throws IOException;
         byte[] getPhotoFromDisk(PhotoEntity photo) throws IOException;
         /**
          * Получаем расширение файла

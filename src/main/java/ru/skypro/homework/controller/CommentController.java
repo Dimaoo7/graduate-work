@@ -15,6 +15,8 @@ import ru.skypro.homework.dto.Comment;
 import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.CreateOrUpdateComment;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.impl.AdServiceImpl;
 import ru.skypro.homework.service.impl.CommentServiceImpl;
 import ru.skypro.homework.service.impl.LoggingMethodImpl;
@@ -25,10 +27,10 @@ import ru.skypro.homework.service.impl.LoggingMethodImpl;
 @RequestMapping("/ads")
 public class CommentController {
     private final UserRepository userRepository;
-    private final CommentServiceImpl commentService;
-    private final AdServiceImpl adService;
+    private final CommentService commentService;
+    private final AdService adService;
 
-    public CommentController(UserRepository userRepository, CommentServiceImpl commentService, AdServiceImpl adService) {
+    public CommentController(UserRepository userRepository, CommentService commentService, AdService adService) {
         this.userRepository = userRepository;
         this.commentService = commentService;
         this.adService = adService;

@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.entity.UserEntity;
@@ -15,6 +16,8 @@ import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.PhotoRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.UserService;
+
+import java.io.IOException;
 
 @Service
 @Slf4j
@@ -73,5 +76,17 @@ public class UserServiceImpl implements UserService {
         user.setPhone(updateUser.getPhone());
         userRepository.save(user);
         return user;
+    }
+
+    @Transactional
+    @Override
+    public void updateUserImage(MultipartFile image, Authentication authentication) throws IOException {
+        log.info("Запущен метод сервиса {}", LoggingMethodImpl.getMethodName());
+        UserEntity userEntity = userRepository.findUserEntityByUserName(authentication.getName());
+
+        userEntity = (UserEntity) imageService.updateEntitiesPhoto(image, userEntity);
+        log.info("userEntity создано - {}", userEntity != null);
+        //сохранение сущности user в БД
+        userRepository.save(userEntity);
     }
 }
