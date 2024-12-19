@@ -4,9 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,101 +17,245 @@ import ru.skypro.homework.dto.Ad;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.CreateOrUpdateAd;
 import ru.skypro.homework.dto.ExtendedAd;
-import ru.skypro.homework.entity.PhotoEntity;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.impl.LoggingMethodImpl;
 
 import java.io.IOException;
 
-
-@RequestMapping("/ads")
-@CrossOrigin(value = "http://localhost:3000")
-@RestController
 @Slf4j
+@RestController
+@AllArgsConstructor
+@CrossOrigin("http://localhost:3000")
+@RequestMapping("/ads")
 public class AdsController {
+
     private final AdService adService;
 
-    public AdsController(AdService adService) {
-        this.adService = adService;
-    }
-
+    @Operation(
+            tags = "Объявления",
+            summary = "Получение всех объявлений",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Ads.class)
+                            )
+                    )
+            }
+    )
     @GetMapping
     public ResponseEntity<Ads> getAllAds() {
+        log.info("За запущен метод контроллера: getAllAds");
         return ResponseEntity.ok(adService.getAllAds());
     }
 
-    @GetMapping("/{Id}")
-    public ResponseEntity<ExtendedAd> getAdById(@PathVariable("Id") Long id) {
-        ExtendedAd extendedAd = adService.getAds(id);
-        if (extendedAd != null) {
-            return ResponseEntity.ok(extendedAd);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-
-    }
-
     @Operation(
+            tags = "Объявления",
             summary = "Добавление объявления",
-            tags = {"Объявления"})
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201",
-                    description = "Created",
-                    content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = Ad.class))),
-            @ApiResponse(responseCode = "401",
-                    description = "Unauthorized"),
-            @ApiResponse(responseCode = "403",
-                    description = "Forbidden"),
-            @ApiResponse(responseCode = "404",
-                    description = "Not Found")})
-    @ResponseStatus(HttpStatus.CREATED)
+            responses = {
+                    @ApiResponse(
+                            responseCode = "201",
+                            description = "Created",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Ad.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    )
+            }
+    )
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<Ad> addAd(@RequestPart(value = "properties", required = false) CreateOrUpdateAd properties,
                                     @RequestPart("image") MultipartFile image,
                                     Authentication authentication) throws IOException {
-        log.info("Объявление добавлено {}", LoggingMethodImpl.getMethodName());
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
         return ResponseEntity.ok(adService.addAd(properties, image, authentication));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Ad> updateAd(@PathVariable("Id)") Long id, @RequestBody CreateOrUpdateAd dto) {
-        Ad ad = adService.updateAds(id, dto);
+    @Operation(
+            tags = "Объявления",
+            summary = "Получить информацию об объявлении",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "No content",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found",
+                            content = @Content()
+                    )
+            }
+    )
+    @GetMapping("/{id}")
+    public ResponseEntity<ExtendedAd> getAds(@PathVariable("id") Long id) {
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        ExtendedAd ad = adService.getAds(id);
         if (ad != null) {
             return ResponseEntity.ok(ad);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or @AdServiceImpl.isAuthorAd(authentication.name, #adId)")
-    public ResponseEntity<Void> deleteAd(@PathVariable("id") Long id) {
-        log.info("Объявление удалено {}", LoggingMethodImpl.getMethodName());
-        return (adService.removeAd(id)) ? ResponseEntity.status(HttpStatus.NO_CONTENT).build()
-                : ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-    }
-
-    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @PreAuthorize("hasRole('ADMIN') or @adServiceImpl.isAuthorAd(authentication.name, #adId)")
-    public ResponseEntity<byte[]> updateImage(@PathVariable("id") Long adId,
-                                              @RequestParam MultipartFile image) throws IOException {
-        log.info("Объявление обновлено: {}", LoggingMethodImpl.getMethodName());
-
-        adService.updateImage(adId, image);
-
-        PhotoEntity photo = adService.findPhoto(adId);
-        if (photo != null) {
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.parseMediaType(photo.getMediaType()));
-            headers.setContentLength(photo.getData().length);
-
-            return ResponseEntity.status(HttpStatus.OK).headers(headers).body(photo.getData());
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-}
+    @Operation(
+            tags = "Объявления",
+            summary = "Удаление объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "204",
+                            description = "No Content",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found",
+                            content = @Content()
+                    )
+            }
+    )
+    @DeleteMapping("/{id}")
+    @PreAuthorize(value = "hasRole('ADMIN') or @adServiceImpl.isAuthorAd(authentication.getName(), #adId)")
+    public ResponseEntity removeAd(@PathVariable("id") Long adId) throws IOException {
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        return (adService.removeAd(adId)) ? ResponseEntity.status(HttpStatus.NO_CONTENT).build() :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
 
+    @Operation(
+            tags = "Объявления",
+            summary = "Обновление информации об объявлении",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Ad.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found",
+                            content = @Content()
+                    )
+            }
+    )
+    @PatchMapping("/{id}")
+    @PreAuthorize(value = "hasRole('ADMIN') or @adServiceImpl.isAuthorAd(authentication.getName(), #adId)")
+    public ResponseEntity<Ad> updateAds(@PathVariable("id") Long adId, @RequestBody CreateOrUpdateAd dto) {
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        Ad ad = adService.updateAds(adId, dto);
+        if (ad != null) {
+            return ResponseEntity.ok(ad);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+
+        }
+    }
+
+    @Operation(
+            tags = "Объявления",
+            summary = "Получение объявлений авторизованного пользователя",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = Ads.class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    )
+            }
+    )
+    @GetMapping("/me")
+    public ResponseEntity<Ads> getAdsMe(Authentication authentication) {
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        if (authentication.getName() != null) {
+            String username = authentication.getName();
+            return ResponseEntity.ok(adService.getAdsMe(username));
+
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+
+    @Operation(
+            tags = "Объявления",
+            summary = "Обновление картинки объявления",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "OK",
+                            content = @Content(
+                                    mediaType = MediaType.APPLICATION_OCTET_STREAM_VALUE,
+                                    schema = @Schema(implementation = String[].class)
+                            )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401",
+                            description = "Unauthorized",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "403",
+                            description = "Forbidden",
+                            content = @Content()
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "Not found",
+                            content = @Content()
+                    )
+            }
+    )
+    @PatchMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize(value = "hasRole('ADMIN') or @adServiceImpl.isAuthorAd(authentication.getName(), #adId)")
+    public ResponseEntity<Void> updateImage(@PathVariable("id") Long adId,
+                                            @RequestPart MultipartFile image,
+                                            Authentication authentication) throws IOException {
+        log.info("Method {}", LoggingMethodImpl.getMethodName());
+        log.info("adId = {}", adId);
+        adService.updateImage(adId, image);
+        return ResponseEntity.ok().build();
+
+    }
+}

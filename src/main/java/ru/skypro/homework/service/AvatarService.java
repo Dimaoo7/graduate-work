@@ -6,5 +6,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 public interface AvatarService {
-    void updateAvatar(Long id, MultipartFile image, Authentication authentication) throws IOException;
+    /**
+     * Обновление Avatar
+     * @param id ID пользователя
+     * @param image полученный MultipartFile
+     * @param authentication идентификация пользователя
+     */
+    void updateAvatar(Long id, MultipartFile image, Authentication authentication);
 }

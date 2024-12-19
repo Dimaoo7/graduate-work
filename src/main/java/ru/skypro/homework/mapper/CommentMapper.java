@@ -12,7 +12,7 @@ public class CommentMapper {
         dtoComment.setId(commentEntity.getId());
         dtoComment.setAuthor(commentEntity.getAuthor().getId());
         dtoComment.setAuthorFirstName(commentEntity.getAuthor().getFirstName());
-        dtoComment.setAuthorImage(commentEntity.getAuthor().getAvatar().getFilePath());
+        dtoComment.setAuthorImage(commentEntity.getAuthor().getPhoto().getFilePath());
         dtoComment.setText(commentEntity.getText());
         dtoComment.setCreatedAt(commentEntity.getCreatedAt());
         return dtoComment;

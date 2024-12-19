@@ -1,6 +1,7 @@
 package ru.skypro.homework.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import java.util.List;
 
